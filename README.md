@@ -147,9 +147,10 @@ Since the radar coordinates has an angle, we normalize that angle component.
 The following parameters are used to tune the model, alpha, std_a, and std_yawdd.
 Alpha is a factor used to intialize the convariance matrix P.
 
-In addition to searching for the for parameters values to meet the RMSE criteria, the parameters values must be chosen so the Gaussian distribution parameters are consistent. To this end, we use the NIS which is related to the generalize distance, the square of the Malahobnis distrance. The parameters determine the size of the ellipse that define the distribution and must be selected so that 95% of....
+In addition to searching for the for parameters values to meet the RMSE criteria, the parameters values must be chosen so the Gaussian distribution parameters are consistent. To this end, we use the Normalized Innovation Squared statistic, NIS, which is related to the square of the Mahalanobis distrance from multidimension statistics. The key point here is that NIS follows a chi-squared distribution.
 
-For the final selected parameters, the NIS of the Laser and Radar data are displayed in the graphs below. These data show that the distances are 95% of the time below the expected 95% of the time. NIS is a statistic that follows the chisquare distribution with degrees of freedom 2 and 3 for the laser and radar data. 
+For the final selected parameters, the NIS of the Laser and Radar data are displayed in the graphs below. These data show that the distances are 95% of the time below the expected 95% of the time. NIS is a statistic that follows the chisquare distribution with degrees of freedom 2 and 3 for the laser and radar data respectively.
 
 ![NISLaser](./NISLaser.png)
+
 ![NISRadar](./NISRadar.png)
