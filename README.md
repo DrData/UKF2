@@ -56,7 +56,7 @@ The base class UKF has one main public method ProcessMeasurement that is respons
 ### Initialize the state variable, x
 
 There are three virtual methods that can be specialized by derived class for the specific sensor:
-1. **InitializeMeasurement** - handles the first measurement, initializing the state vector based on the first measurment and sets up the subsequent process.
+1. **InitializeMeasurement** - handles the first measurement, initializing the state vector based on the first measurment and sets up the subsequent process. If the first measurement is a lidar measurement, then we populate the x and y coordinate of the state vector directly from the measurment and remaining components taken as zero. If the first measurement is a radar measurment, we convert the polar coordinate radar measurment into the Cartesian space of the state vector. The x and y coordinate can be obtained from r and phi. The longitudinal velocity is just r_dot. The rest of the state vector are set to zero.
 
 ### Initializing P
 When available the covariance matrix was initialized using the measurement uncertainy of the corresponding state variable. For the variables, x and y, we use the standard deviation of the lidar uncertainty in measuring the position x and y - 0.15 and 0.15.
