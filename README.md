@@ -65,7 +65,7 @@ For the velocity, the radar measured rho_dot directly and so we used the uncerta
 
 For yaw and yawdot, I left that as a variable scale parameter named alpha which I varied to (1) meet the RMSE criteria and (2) to make the NIS consistent.
 The final P initialization is listed below. 
-```
+```tex
 $$
 P =  \begin{bmatrix}
     0.15^{2}& & & &\\
