@@ -121,7 +121,6 @@ Takes the predicted sigma points in state space into the measurement space. Here
 NormalizeMeasurementAngles
 Since there are no angles, it does nothing.
 
-
 ### UKF Radar
 Member variables for Radar:
 
@@ -148,7 +147,7 @@ Since the radar coordinates has an angle, we normalize that angle component.
 
 ### Tuning Parameters
 The following parameters are used to tune the model, alpha, std_a, and std_yawdd.
-Alpha is a factor used to intialize the convariance matrix P.
+Alpha is a factor used to intialize a part of the convariance matrix P where we don't have specfic information.
 
 In addition to searching for the for parameters values to meet the RMSE criteria, the parameters values must be chosen so the Gaussian distribution parameters are consistent. To this end, we use the Normalized Innovation Squared statistic, NIS, which is related to the square of the Mahalanobis distrance from multidimension statistics. The key point here is that NIS follows a chi-squared distribution.
 
@@ -173,6 +172,8 @@ double Tools::CalculateNISCoverage(const double dof, const vector<double>& vNIS)
 
 ```
 For the final parameters the coverage for laser and radar data were 96% and 94%. Which means the selected parameters are consistent. The plot of the NIS are below. The horizontal line is the 95% confidence interval for a chi-square distribution for the given degrees of freedom.
+
+The final parameters used in the submission are std_a = 1.5, std_yawdd=0.6, alpha=0.1.
 
 ![NISLaser](./NISLaser.png)
 
