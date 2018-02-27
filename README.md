@@ -172,10 +172,7 @@ double Tools::CalculateNISCoverage(const double dof, const vector<double>& vNIS)
 }
 
 ```
-For the final parameters the coverage for laser and radar data were 96% and 94%. Which means the selected parameters are consistent.
-
-
-The final selected parameters for the linear acceleration and rotational acceleration were 1.5 and 0.6. The initial values were based on the estimates from the lesson. 
+For the final parameters the coverage for laser and radar data were 96% and 94%. Which means the selected parameters are consistent. The plot of the NIS are below. The horizontal line is the 95% confidence interval for a chi-square distribution for the given degrees of freedom.
 
 ![NISLaser](./NISLaser.png)
 
