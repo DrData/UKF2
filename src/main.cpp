@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 	//return 0;
 
 	uWS::Hub h;
-	alpha = 0.01;
+	alpha = 0.1;
 	std_a = 1.5;
 	std_ydd = 0.6;
 

@@ -43,9 +43,12 @@ SensorFusion::SensorFusion(KFType kftypeLaser, KFType kftypeRadar,
 	UKFRadar* radarfs = dynamic_cast<UKFRadar*>(mapSensorsType2KF_[MeasurementPackage::RADAR]);
 	double stdv = radarfs->GetStd_rd();
 
-	VectorXd pDiag(N_STATE_VECTOR_DIMENSION);
-	pDiag << stdx * stdx, stdy*stdy, stdv*stdv, alpha, alpha;
-	theState_.P_ = pDiag.asDiagonal();
+	if (true)
+	{
+		VectorXd pDiag(N_STATE_VECTOR_DIMENSION);
+		pDiag << stdx * stdx, stdy*stdy, stdv*stdv, alpha, alpha;
+		theState_.P_ = pDiag.asDiagonal();
+	}
 }
 
 SensorFusion::~SensorFusion()

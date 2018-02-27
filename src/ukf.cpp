@@ -122,7 +122,7 @@ void UKF::AugmentedSigmaPoints()
 	MatrixXd L = P_aug_.llt().matrixL();
 	Eigen::LLT<MatrixXd> lltOfPaug(P_aug_);
 	if (lltOfPaug.info() == Eigen::NumericalIssue) {
-		cout << "numerical " << endl;
+		cout << "NumericalIssue " << endl;
 	}
 
 	//create augmented sigma points
@@ -147,7 +147,8 @@ void UKF::SigmaPointPrediction(const double delta_t)
 		double p_x  = Xsig_pts_(0, i);
 		double p_y  = Xsig_pts_(1, i);
 		double v    = Xsig_pts_(2, i);
-		double yaw  = NormalizeAngle(Xsig_pts_(3, i));
+//		double yaw  = NormalizeAngle(Xsig_pts_(3, i));
+		double yaw = Xsig_pts_(3, i);
 		double yawd = Xsig_pts_(4, i);
 		double nu_a = Xsig_pts_(5, i);
 		double nu_yawdd = Xsig_pts_(6, i);
@@ -183,7 +184,8 @@ void UKF::SigmaPointPrediction(const double delta_t)
 		Xsig_pred_(0, i) = px_p;
 		Xsig_pred_(1, i) = py_p;
 		Xsig_pred_(2, i) = v_p;
-		Xsig_pred_(3, i) = NormalizeAngle(yaw_p);
+//		Xsig_pred_(3, i) = NormalizeAngle(yaw_p);
+		Xsig_pred_(3, i) = yaw_p;
 		Xsig_pred_(4, i) = yawd_p;
 	}
 }
@@ -192,7 +194,7 @@ void UKF::PredictMeanAndCovariance()
 {
 	//predicted state mean
 	x_pred_mean_ = Xsig_pred_ * weights_; // (n_x_, n_aug_) * (n_aug_)
-
+	//x_pred_mean_(3) = NormalizeAngle(x_pred_mean_(3));
 	//predicted state covariance matrix
 	P_pred_covar_.fill(0.0);
 
@@ -282,6 +284,7 @@ void UKF::Update(const MeasurementPackage& meas)
 
 	//update state mean and covariance matrix
 	_pSV->x_ = x_pred_mean_ + K * z_diff_;
+	_pSV->x_(3) = NormalizeAngle(_pSV->x_(3));
 	_pSV->P_ = P_pred_covar_ - K * S_ * K.transpose();
 
 	// NIS
@@ -331,11 +334,9 @@ bool UKFRadar::InitializeMeasurement(const MeasurementPackage &meas_package)
 
 		double px = r * cos(theta);
 		double py = r * sin(theta);
-		//double vx = rdot * cos(theta);
-		//double vy = rdot * sin(theta);
-
 		double v = fabs(rdot);
-		double phi = theta;  // yaw rotation about axis perpendicular to plane
+
+		double phi = 0.0;
 		double phidot = 0;
 
 		this->_pSV->x_ << px, py, v, phi, phidot;
