@@ -173,6 +173,8 @@ double Tools::CalculateNISCoverage(const double dof, const vector<double>& vNIS)
 ```
 For the final parameters the coverage for laser and radar data were 96% and 94%. Which means the selected parameters are consistent. The plot of the NIS are below. The horizontal line is the 95% confidence interval for a chi-square distribution for the given degrees of freedom.
 
+The initial parameters were based a ballpark estimate of a bicycle acceleration from physical considerations. They were adjusted to get RMSE under the criteria and the NIS statistics consistent.
+
 The final parameters used in the submission are std_a = 1.5, std_yawdd=0.6, alpha=0.1.
 
 ![NISLaser](./NISLaser.png)
