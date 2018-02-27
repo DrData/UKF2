@@ -21,11 +21,9 @@ The other code source in src are unmodified.
 
 
 ### Rubric: Accuracy
-2. The final RMSE were [0.083, 0.083, 0.37, 0.15], which is below the threshold of [.09, 0.10, 0.40, 0.30] set in the rubric.
-![rmse](./rmse.png)
-
-The estimated and ground truth is plotted below from the simulator:
-![path](./sim.PNG)
+2. The final RMSE were [0.083, 0.081, 0.39, 0.18], which is below the threshold of [.09, 0.10, 0.40, 0.30] set in the rubric.
+The RMSE and the estimated and ground truth is plotted below from the simulator:
+![path](./estimate_RMSE.PNG)
 
 ### Rubric: Follows the general processing follow
 
@@ -114,10 +112,10 @@ Constructor initialized the following:
 2. The innovation and cross correlation matrices are allocated
 3. Flag to process data or not.
 
-InitializeMeasurement
-1. Initialize the state vector with information from the first measurement
+**InitializeMeasurement**
+Initialize the state vector with information from the first measurement. The state vector for px and py are assigned the first measurment's x and y. The remaining state vector components are set to zero.
 
-Convert2MeasurementSpace
+**Convert2MeasurementSpace**
 Takes the predicted sigma points in state space into the measurement space. Here the conversion is simple since the laser measures the position only and the state vector contains the position.
 
 NormalizeMeasurementAngles
@@ -129,12 +127,17 @@ Member variables for Radar:
 
 Constructor initialized the following:
 1. n\_z\_ this is the number of dimensions in the radar measurement space, 3.
+2. The innovation and cross correlation matrices are allocated
+3. Flag to process data or not.
 
-Methods overridden
-Convert2MeasurementSpace
+**InitializeMeasurement**
+Since the radar measurements are in polar coordinates (rho, theta, rhodot), they need to be convert back into Cartesian coorindates, into (r cos(theta), r sin(theta), abs(rhodot), 0, 0). The remaining state vector coordinates are set to zero.
+
+**Convert2MeasurementSpace**
+
 Takes the predicted sigma points in state space into the measurement space. For the radar measurement this requires transforming the state vector into the polar coordinates of the radar system.
 
-NormalizeMeasurementAngles
+**NormalizeMeasurementAngles**
 Since the radar coordinates has an angle, we normalize that angle component.
 
 
@@ -149,7 +152,30 @@ Alpha is a factor used to intialize the convariance matrix P.
 
 In addition to searching for the for parameters values to meet the RMSE criteria, the parameters values must be chosen so the Gaussian distribution parameters are consistent. To this end, we use the Normalized Innovation Squared statistic, NIS, which is related to the square of the Mahalanobis distrance from multidimension statistics. The key point here is that NIS follows a chi-squared distribution.
 
-For the final selected parameters, the NIS of the Laser and Radar data are displayed in the graphs below. These data show that the distances are 95% of the time below the expected 95% of the time. NIS is a statistic that follows the chisquare distribution with degrees of freedom 2 and 3 for the laser and radar data respectively.
+For the final selected parameters, the NIS of the Laser and Radar data are displayed in the graphs below. We can compute the coverage from the NIS by computing the percent number of points that are below the chi-square value for 95% coverage for 2 and 3 degrees of freedom for the laser and radar data. 
+```
+double Tools::CalculateNISCoverage(const double dof, const vector<double>& vNIS)
+{
+	double n95;
+	if (dof == 3)
+		n95 = 7.815;
+	else if (dof == 2)
+		n95 = 5.991;
+	else if (dof == 1)
+		n95 = 3.841;
+	else
+		throw "dof out of range";
+
+	if (vNIS.size() < 1) return 0.0;
+	int nBelow = count_if(vNIS.begin(), vNIS.end(), [&n95](double nis)->bool { return nis <= n95; });
+	return (double) nBelow / (double) vNIS.size();
+}
+
+```
+For the final parameters the coverage for laser and radar data were 96% and 94%. Which means the selected parameters are consistent.
+
+
+The final selected parameters for the linear acceleration and rotational acceleration were 1.5 and 0.6. The initial values were based on the estimates from the lesson. 
 
 ![NISLaser](./NISLaser.png)
 
